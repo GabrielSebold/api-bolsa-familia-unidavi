@@ -1,0 +1,26 @@
+{
+  "project_type": "Monorepo informal: API Node.js/Fastify (raiz, NAO alterar) + novo SPA React/Vite/TypeScript independente em frontend/ (proprio package.json)",
+  "language": "TypeScript (frontend, strict); API existente em JavaScript ESM. UI em pt-BR.",
+  "build_system": "npm + Vite 8 (frontend). Node 22.17 / npm 9.2. Dependencias com versoes EXATAS (npm install --save-exact; sem ^ ou ~).",
+  "test_framework": "Vitest 5.0.3 (ambiente node, so funcoes puras + teste de contraste lendo src/styles/tokens.css). API raiz usa node --test.",
+  "build_command": "cd /home/leonardo/myprojects/api-bolsa-familia/frontend && npm run build   (= tsc --noEmit && vite build)",
+  "test_command": "cd /home/leonardo/myprojects/api-bolsa-familia/frontend && npm test   (= vitest run).  Regressao da API: cd /home/leonardo/myprojects/api-bolsa-familia && npm test (33 testes devem continuar passando)",
+  "verification_instructions": "1) Subir API em mock na raiz: USE_MOCK=true PORT=3333 npm start (background; anotar PID; encerrar so o que voce iniciou; 8080 e de outro processo). 2) No front: npm install && npm test && npm run build; npm run dev (porta 5173, strictPort); npm run preview (4173). 3) Verificacao visual Playwright conforme secao 5 de /home/leonardo/myprojects/api-bolsa-familia/.agents/tasks/plan.md; relatorio em .agents/tasks/verificacao-frontend.md e capturas em .agents/tasks/screenshots/.",
+  "snapshot_or_generated_files": "Nenhum arquivo gerado e versionado. frontend/dist e node_modules ficam no .gitignore do frontend. Capturas e relatorio ficam em .agents/tasks/ (fora de frontend/).",
+  "environment_constraints": "NUNCA ler/exibir /home/leonardo/myprojects/api-bolsa-familia/.env (segredo). Subir a API sempre com USE_MOCK=true (a variavel de ambiente tem precedencia sobre o .env; evita chamadas reais com a chave). NAO fazer commits git nem push. NAO alterar src/ ou test/ da API. Nao matar processos que voce nao iniciou (porta 8080 pertence a outro processo). .env.example NAO existe na raiz (README da API manda copiar, mas o arquivo falta). Usar sempre caminhos absolutos. Stub/artefatos temporarios em os.tmpdir() e remover ao final.",
+  "contribution_requirements": "Sem AGENTS.md/CONTRIBUTING no repo. Regras do pedido: componentes pequenos; funcoes puras de calculo isoladas e testaveis; NAO inventar nem arredondar dados (arredondar so na exibicao via Intl); sem dangerouslySetInnerHTML/innerHTML; sem analytics; README do front + secao curta no README da raiz (mudanca minima); testes Vitest enxutos.",
+  "key_patterns": "Contrato da API: GET /api/v1/repasses?codigoIbge=&de=AAAAMM&ate=AAAAMM (serie max 36 meses) -> {consulta,dados:Registro[],meta:{origem,atualizadoEm}}; erro {erro:{codigo,mensagem,tentarNovamenteEm?}}; mes sem dados nao gera item (buracos); varios registros por mes possiveis (tipo.id); valorMedio pode ser null. Validacao IBGE espelha src/domain/codigoIbge.js (pesos 1,2,1,2,1,2; soma p>9?p-9:p; dv=(10-soma%10)%10; UFs validas 11-17,21-29,31-33,35,41-43,50-53). Lista de municipios vem da API publica do IBGE (a API do projeto nao tem rota) com cache localStorage + fallback de 6 municipios. Mock aceita so 6 municipios (4214805,3550308,3304557,5300108,4106902,2927408); demais -> 404 MUNICIPIO_NAO_ENCONTRADO (1100015 e valido e da 404). Hoje = 2026-10-08; periodo padrao = 202509..202608; consulta unica com janela estendida 12 meses para tras (limite 36) para o ano a ano. Graficos: Recharts 3.10.1 (SVG) com cores via var(--...) e padroes SVG; paleta Okabe-Ito.",
+  "relevant_files": [
+    "/home/leonardo/myprojects/api-bolsa-familia/.agents/tasks/plan.md",
+    "/home/leonardo/myprojects/api-bolsa-familia/README.md",
+    "/home/leonardo/myprojects/api-bolsa-familia/plan/2.6-Especificacao-da-API-Integracao-de-Dados.md",
+    "/home/leonardo/myprojects/api-bolsa-familia/plan/1a-Termo de Abertura do Projeto.docx.md",
+    "/home/leonardo/myprojects/api-bolsa-familia/src/routes/repasses.js",
+    "/home/leonardo/myprojects/api-bolsa-familia/src/routes/schemas.js",
+    "/home/leonardo/myprojects/api-bolsa-familia/src/domain/codigoIbge.js",
+    "/home/leonardo/myprojects/api-bolsa-familia/src/domain/mesAno.js",
+    "/home/leonardo/myprojects/api-bolsa-familia/src/services/municipiosService.js",
+    "/home/leonardo/myprojects/api-bolsa-familia/src/services/repassesService.js"
+  ],
+  "directory_structure": "Raiz: src/ (API), test/, plan/ (documentos), .agents/tasks/ (artefatos do workflow), .env (segredo). Novo: frontend/{package.json,vite.config.ts,index.html,.env.example,README.md,src/{main.tsx,App.tsx,types,services,hooks,utils,components,styles}}. Estrutura detalhada na secao 3 do plan.md."
+}

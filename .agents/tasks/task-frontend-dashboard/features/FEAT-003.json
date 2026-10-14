@@ -1,0 +1,31 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Refino de acessibilidade (WCAG 2.1 AA/eMAG) e responsividade (RNF03/RNF04), secao 'Acessibilidade' na pagina, README do frontend, secao curta no README da raiz e verificacao visual com Playwright (cenas obrigatorias do plan.md secao 5), corrigindo o que for encontrado. Depende do FEAT-002.",
+  "status": "pending",
+  "steps": [
+    "Ler primeiro context.json, FEAT-001.json e FEAT-002.json (campo findings) e a secao 5 do /home/leonardo/myprojects/api-bolsa-familia/.agents/tasks/plan.md. Nao ler o .env da raiz.",
+    "Criar src/components/Acessibilidade.tsx (secao 'Acessibilidade' visivel na pagina: atalhos accesskey, navegacao por teclado, A+/A-, tema, como relatar problemas) e incluir no App.tsx/rodape.",
+    "Subir a API em mock (USE_MOCK=true PORT=3333 npm start na raiz, background, anotar PID) e o front (npm run dev em 5173; npm run build && npm run preview em 4173). Criar stub temporario de API em os.tmpdir() (porta 3334) para os estados erro/vazio/carregando/cache-desatualizado e uma 2a instancia do Vite em 5174 com VITE_API_URL=http://localhost:3334.",
+    "Executar as cenas 1-12 do plan.md secao 5 com Playwright (tools playwright::* via tool_load/tool_call, ou npx playwright se disponivel): desktop/tablet/mobile claro e escuro, 320px sem rolagem horizontal, zoom 200%/A+, filtros + URL + Voltar + Restaurar, combobox por teclado, validacao de periodo, todos os estados, teclado/skip link/foco, 1 request por consulta no build, console limpo, reduced-motion. Salvar capturas em /home/leonardo/myprojects/api-bolsa-familia/.agents/tasks/screenshots/ e escrever /home/leonardo/myprojects/api-bolsa-familia/.agents/tasks/verificacao-frontend.md com cena, resultado e correcao aplicada. Corrigir falhas de CSS/ARIA/layout e repetir a cena.",
+    "Criar /home/leonardo/myprojects/api-bolsa-familia/frontend/README.md (o que e, stack e por que Recharts, pre-requisitos Node >=22.12, .env VITE_API_URL, como rodar: 1o API na raiz com USE_MOCK=true npm start, depois npm install && npm run dev -> http://localhost:5173, build de producao, estrutura de pastas, acessibilidade e como testar, tema escuro, testes npm test, limitacoes: mock so 6 municipios, IBGE externo, serie lenta com cache frio, ano a ano via janela estendida, sem exportacao).",
+    "Adicionar ao /home/leonardo/myprojects/api-bolsa-familia/README.md uma secao curta 'Frontend' apontando para frontend/README.md (mudanca minima; nao reescrever o resto).",
+    "Encerrar APENAS os processos iniciados por voce (API, vite dev/preview, stub); remover stub e temporarios de os.tmpdir(). NAO fazer commits git."
+  ],
+  "acceptance_criteria": [
+    "verificacao-frontend.md registra todas as cenas 1-12 com resultado OK (ou correcao aplicada) e as capturas existem em .agents/tasks/screenshots/",
+    "Em 320px, 375px, 768px, 1280px e zoom 200%: document.documentElement.scrollWidth <= clientWidth",
+    "Tema claro/escuro/automatico funciona, persiste e e aplicado antes do 1o render; graficos mudam de cor com o tema",
+    "Navegacao 100% por teclado com foco visivel; skip link aparece no primeiro Tab",
+    "Console do navegador sem erros nas cenas principais",
+    "frontend/README.md e secao no README da raiz existem e os comandos nele funcionam",
+    "npm test e npm run build do frontend e npm test da raiz passam"
+  ],
+  "verification": [
+    "cd /home/leonardo/myprojects/api-bolsa-familia/frontend && npm test && npm run build",
+    "cd /home/leonardo/myprojects/api-bolsa-familia && npm test",
+    "Playwright: cenas do plan.md secao 5 executadas e registradas em .agents/tasks/verificacao-frontend.md"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

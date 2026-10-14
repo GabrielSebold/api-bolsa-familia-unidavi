@@ -1,0 +1,82 @@
+/*
+ * Tokens de design. Cores em hex literal (sem var()) porque styles/contraste.test.ts lê este arquivo.
+ * Paleta de gráficos baseada em Okabe-Ito (segura para daltonismo); a cor nunca é o único canal:
+ * os gráficos usam também padrões, marcadores e tracejados.
+ * Metas: texto >= 4.5:1; bordas, foco e elementos de gráfico >= 3:1.
+ */
+
+:root,
+[data-theme='claro'] {
+  --cor-fundo: #ffffff;
+  --cor-superficie: #f3f5f7;
+  --cor-texto: #17202a;
+  --cor-texto-suave: #46525f;
+  --cor-borda: #66727f;
+  --cor-borda-suave: #d5dbe1;
+  --cor-primaria: #00598a;
+  --cor-primaria-texto: #ffffff;
+  --cor-link: #00598a;
+  --cor-foco: #0072b2;
+  --cor-erro-fundo: #fdecea;
+  --cor-erro-texto: #8a1c10;
+  --cor-aviso-fundo: #fff4d6;
+  --cor-aviso-texto: #5c4200;
+  --cor-info-fundo: #e5f1fa;
+  --cor-info-texto: #0b3f63;
+
+  --cor-grafico-1: #0072b2;
+  --cor-grafico-2: #a86a00;
+  --cor-grafico-3: #007a59;
+  --cor-grafico-4: #d55e00;
+  --cor-grafico-5: #a1457a;
+  --cor-grafico-positivo: #007a59;
+  --cor-grafico-negativo: #d55e00;
+  --cor-grafico-eixo: #66727f;
+}
+
+[data-theme='escuro'] {
+  --cor-fundo: #0f1419;
+  --cor-superficie: #1a222b;
+  --cor-texto: #e8edf2;
+  --cor-texto-suave: #b4bfca;
+  --cor-borda: #8a97a5;
+  --cor-borda-suave: #34404c;
+  --cor-primaria: #56b4e9;
+  --cor-primaria-texto: #0f1419;
+  --cor-link: #7cc4f0;
+  --cor-foco: #f0c24a;
+  --cor-erro-fundo: #3a1a17;
+  --cor-erro-texto: #ffb4a8;
+  --cor-aviso-fundo: #3a2f12;
+  --cor-aviso-texto: #f6d98a;
+  --cor-info-fundo: #14293a;
+  --cor-info-texto: #a9d6f5;
+
+  --cor-grafico-1: #56b4e9;
+  --cor-grafico-2: #e69f00;
+  --cor-grafico-3: #2fbf94;
+  --cor-grafico-4: #e8743b;
+  --cor-grafico-5: #cc79a7;
+  --cor-grafico-positivo: #2fbf94;
+  --cor-grafico-negativo: #e8743b;
+  --cor-grafico-eixo: #8a97a5;
+}
+
+:root {
+  --fonte-base: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --fonte-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --espaco-1: 0.25rem;
+  --espaco-2: 0.5rem;
+  --espaco-3: 0.75rem;
+  --espaco-4: 1rem;
+  --espaco-5: 1.5rem;
+  --espaco-6: 2rem;
+  --espaco-7: 3rem;
+
+  --raio: 0.5rem;
+  --alvo-minimo: 44px;
+  --largura-max: 75rem;
+  --foco-largura: 3px;
+  --foco-offset: 2px;
+}

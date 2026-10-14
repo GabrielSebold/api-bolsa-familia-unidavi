@@ -32,3 +32,34 @@ Sem commits git (o diretório nem é repositório git). Node v22.17.0, npm 9.2.0
 ## Não verificável sem chave real
 
 Nada foi testado contra a API real do Portal da Transparência. Itens pendentes: limites reais de req/min (90/300) e faixas de horário; se a API devolve 429 e `Retry-After`; formato real de `dataReferencia`, `nomeIBGE`, `tipo.descricao` e se o schema zod (que exige `municipio.uf.sigla` e `tipo.descricao`) aceita a resposta real; meses de transição entre os programas; ajustes tardios nos últimos meses (TTLs); `pagina` opcional no Novo Bolsa Família; taxa de sucesso ≥ 95% real; resposta a 401/403 e decodificação ISO-8859-1; estrutura real do JSON de municípios do IBGE (download da tabela completa não foi exercitado, pois exige rede).
+
+# Verificação do frontend (retomada)
+Playwright MCP falhou (navegador não instalado); usado playwright-core com Chromium headless local e axe-core 4.10.2 instalado fora do projeto (/tmp, removido). Screenshots só de viewport (<= 2000 px); os PNGs fullPage antigos (> 2000 px) foram removidos.
+| Cena | Resultado | Correção |
+| :-- | :-- | :-- |
+| Build/testes | front: build ok, 96 testes ok; raiz: 33/33 ok; sem ^ ou ~ no package.json | - |
+| 375x812, 768x1024, 1280x800, claro e escuro (topo e gráficos) | scrollWidth == clientWidth; 1 h1; lang pt-BR; 3 gráficos SVG; tema aplicado corretamente | - |
+| 320x640 | sem rolagem horizontal (320/320) | - |
+| axe-core (wcag2a/aa/21a/21aa/best-practice), 6 combinações | 1 violação `region` (grupo "Tamanho do texto" fora de landmark) | Barra de acessibilidade virou `<section aria-label>`; reexecução: 0 violações |
+| Teclado | 1º Tab = skip link, outline 3px; ordem: atalhos, A-/A+, tema, município, período | - |
+| Tema | clique em Escuro grava `bf:tema`; persiste após reload | - |
+| Filtros pela URL (Curitiba, 24 meses, famílias) | dados atualizam | - |
+| Município 1100015 no mock | o mock agora devolve dados (o plano previa 404); erros cobertos pelas capturas estado-erro-* da execução anterior (stub) | - |
+| Console | sem erros nem avisos | - |
+Não validado: dados reais do Portal da Transparência (sem chave; verificado em mock); leitor de tela real e revisão especialista de acessibilidade não foram possíveis.
+
+# Relatório final (frontend)
+
+**Arquivos criados (todos novos, em `frontend/`)**: `package.json`, `package-lock.json`, `index.html`, `vite.config.ts`, `tsconfig.json`, `.env.example` (só `VITE_API_URL`), `.gitignore`, `README.md`, `public/favicon.svg`; `src/` com `main.tsx`, `App.tsx`, `vite-env.d.ts`; `components/` (Acessibilidade, BarraAcessibilidade, CardsIndicadores, Estados, Filtros, FonteDados, GraficoAnoAAno, GraficoEvolucao, GraficoMesAMes, GraficoMoldura, graficoComum, MunicipioCombobox, padroesSvg, PeriodoFiltro, SeletorIndicador, TabelaDados, ThemeToggle); `hooks/` (useEscalaFonte, useFiltrosUrl, useMunicipios, useRepasses, useTema); `services/` (api, config, municipios); `styles/` (tokens, base, layout, components, contraste.test); `types/api.ts`; `utils/` (busca, erros, formatadores, ibge, periodo, series, textoGrafico, textoVariacao, variacao, com testes `.test.ts`).
+**Alterados**: `README.md` da raiz (seção "Frontend"), `.agents/tasks/{plan,review,verificacao}.md`, `review.json`. `.env.example` da raiz aparece como removido no git status (não alterado por esta etapa final).
+
+**Como rodar**
+1. API (raiz): `npm install && USE_MOCK=true PORT=3333 npm start` → http://localhost:3333 (Swagger em /docs).
+2. Front: `cd frontend && npm install && npm run dev` → http://localhost:5173 (usa `VITE_API_URL`, padrão http://localhost:3333).
+
+**Resultados** (conforme verificacao.md e review.md): build do front ok; 96 testes do front ok; 33/33 testes na raiz; axe-core 4.10.2 (wcag2a/aa/21a/21aa/best-practice, 6 combinações tema x viewport): 1 violação `region` corrigida, reexecução com 0 violações; sem rolagem horizontal em 320/375/768/1280; sem erros no console. Revisão: APPROVED.
+**Evidências**: `.agents/tasks/screenshots/` (32 PNGs, máx. 1280 px).
+
+**Não verificado**: dados reais do Portal da Transparência (sem chave; só mock); leitor de tela real e revisão especialista de acessibilidade. Também sem evidência: zoom 200%, A+ x3, contagem/cancelamento de requisições e reducedMotion.
+
+**Limpeza**: nenhum processo de API/Vite em 3333/5173; nenhum navegador do Playwright em execução (o Chrome ativo e o servidor playwright-mcp são do ambiente do usuário, mantidos). Removidos temporários de /tmp (logs/pids/scripts bf-*, playwright-artifacts-*, perfis chromium) e `data/cache.sqlite`. `.env` não foi lido. Sem commits.

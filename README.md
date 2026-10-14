@@ -47,6 +47,10 @@ Encerramento gracioso em `SIGINT`/`SIGTERM` (fecha o servidor, o SQLite e o agen
 - No mock não há rede: nem Portal da Transparência, nem IBGE. Também não passa por cache, fila nem circuit breaker.
 - Modo real **sem chave**: responde `502 CHAVE_API_AUSENTE_OU_INVALIDA`, sem expor detalhes.
 
+## Frontend
+
+Existe um dashboard web (React + Vite) em [`frontend/`](frontend/README.md) que consome esta API. Com a API em mock (`USE_MOCK=true npm start`), rode `cd frontend && npm install && npm run dev` e abra http://localhost:5173.
+
 ## Endpoints
 
 | Rota | Descrição |

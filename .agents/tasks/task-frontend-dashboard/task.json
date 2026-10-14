@@ -1,0 +1,7 @@
+{
+  "task_id": "task-frontend-dashboard",
+  "task_description": "Criar o frontend (React + Vite + TypeScript) em /home/leonardo/myprojects/api-bolsa-familia/frontend: Dashboard (RF02 cards, RF03 graficos, RNF03 responsivo, RNF04 acessibilidade) e Filtros (RF04) com modo escuro, consumindo a API Node.js existente (http://localhost:3333). Plano completo em /home/leonardo/myprojects/api-bolsa-familia/.agents/tasks/plan.md",
+  "status": "pending",
+  "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003"],
+  "blocked_reason": null
+}

@@ -1,10 +1,1 @@
-{
-  "verdict": "APPROVED",
-  "findings": [
-    "Não bloqueante (likely): o rate limiter conta um slot por buscarMes, mas o cliente pode fazer até 20 requisições HTTP (paginação) por slot; considerar agendar por página ou documentar.",
-    "Não bloqueante (confirmed, documentado): sem rede, só 6 municípios embutidos são aceitos; os demais retornam 404 (consta nas Limitações do README).",
-    "Não bloqueante (possible): série de até 36 meses é sequencial; com cache frio a latência pode ser alta.",
-    "Não bloqueante (confirmed): nada foi validado contra a API real (schema zod rígido, 429/Retry-After, ISO-8859-1, dataReferencia); validar quando houver chave."
-  ],
-  "reviewDoc": "/home/leonardo/myprojects/api-bolsa-familia/.agents/tasks/review.md"
-}
+{"verdict":"APPROVED","findings":["Cenas sem evidência registrada: zoom 200%, A+ x3, contagem de 1 request por consulta, cancelamento de requisição e reducedMotion (não bloqueante).","Verificar/alinhar documentação do mock: verificacao.md diz que 1100015 agora retorna dados, o plano previa 404; conferir README do front (não bloqueante).","Lista de municípios depende da API do IBGE no browser, com fallback de 6 municípios; rota na API seria melhor (melhoria futura).","Sem validação com dados reais do Portal e sem leitor de tela real (limitação declarada)."],"reviewDoc":"/home/leonardo/myprojects/api-bolsa-familia/.agents/tasks/review.md"}
