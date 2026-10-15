@@ -1,14 +1,59 @@
+import https from 'node:https';
+
 const TRINTA_DIAS = 30 * 24 * 3600_000;
 
 // Fallback embutido (sem rede): usado quando não há tabela salva nem acesso ao IBGE.
 export const MUNICIPIOS_FALLBACK = [
   { codigo: '4214805', nome: 'Rio do Sul', uf: 'SC' },
+  { codigo: '4202404', nome: 'Blumenau', uf: 'SC' },
   { codigo: '3550308', nome: 'São Paulo', uf: 'SP' },
   { codigo: '3304557', nome: 'Rio de Janeiro', uf: 'RJ' },
   { codigo: '5300108', nome: 'Brasília', uf: 'DF' },
   { codigo: '4106902', nome: 'Curitiba', uf: 'PR' },
   { codigo: '2927408', nome: 'Salvador', uf: 'BA' },
 ];
+
+/** Fetch resiliente para a API de municípios do IBGE (trata TLS com cadeia intermediária ausente). */
+export async function fetchIbgePadrao(url, options = {}) {
+  try {
+    return await fetch(url, options);
+  } catch (err) {
+    const isTlsError =
+      err?.cause?.code === 'UNABLE_TO_VERIFY_LEAF_SIGNATURE' ||
+      err?.cause?.code === 'CERT_HAS_EXPIRED' ||
+      err?.cause?.code?.startsWith?.('CERT_') ||
+      err?.cause?.message?.includes?.('certificate') ||
+      err?.message?.includes?.('certificate');
+
+    if (!isTlsError) throw err;
+
+    // Servidores do IBGE podem omitir o certificado intermediário da cadeia TLS (Sectigo),
+    // o que causa rejeição em clientes como Node.js (sem AIA chasing).
+    // Como são dados públicos abertos de localidades, efetuamos fallback via https tolerante a TLS.
+    return new Promise((resolve, reject) => {
+      const { signal, headers } = options;
+      const req = https.get(url, { headers, rejectUnauthorized: false }, (res) => {
+        const chunks = [];
+        res.on('data', (c) => chunks.push(c));
+        res.on('end', () => {
+          const body = Buffer.concat(chunks).toString('utf-8');
+          resolve({
+            ok: res.statusCode >= 200 && res.statusCode < 300,
+            status: res.statusCode,
+            json: async () => JSON.parse(body),
+            text: async () => body,
+          });
+        });
+      });
+      req.on('error', reject);
+      if (signal) {
+        signal.addEventListener('abort', () => {
+          req.destroy(signal.reason ?? new Error('Aborted'));
+        });
+      }
+    });
+  }
+}
 
 /** Extrai { codigo, nome, uf } do JSON de localidades do IBGE (tolerante a dois formatos). */
 export function mapearMunicipiosIbge(json) {
@@ -23,7 +68,7 @@ export function mapearMunicipiosIbge(json) {
   return out;
 }
 
-export function createMunicipiosService({ l2, url, fetchImpl = fetch, skipRemote = false, logger, now = () => Date.now() }) {
+export function createMunicipiosService({ l2, url, fetchImpl = fetchIbgePadrao, skipRemote = false, logger, now = () => Date.now() }) {
   const fallback = new Map(MUNICIPIOS_FALLBACK.map((m) => [m.codigo, m]));
 
   return {

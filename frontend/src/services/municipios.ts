@@ -8,6 +8,7 @@ const TTL_MS = 30 * 24 * 3600_000;
 /** Lista embutida usada quando não há cache nem acesso ao IBGE (mesmos municípios do mock da API). */
 export const MUNICIPIOS_FALLBACK: readonly Municipio[] = [
   { codigo: '4214805', nome: 'Rio do Sul', uf: 'SC' },
+  { codigo: '4202404', nome: 'Blumenau', uf: 'SC' },
   { codigo: '3550308', nome: 'São Paulo', uf: 'SP' },
   { codigo: '3304557', nome: 'Rio de Janeiro', uf: 'RJ' },
   { codigo: '5300108', nome: 'Brasília', uf: 'DF' },

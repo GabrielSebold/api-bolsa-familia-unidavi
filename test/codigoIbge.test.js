@@ -4,7 +4,7 @@ import { validarCodigoIbge } from '../src/domain/codigoIbge.js';
 import { validarMesAno, intervaloMeses } from '../src/domain/mesAno.js';
 
 test('códigos IBGE reais são válidos', () => {
-  for (const c of ['4214805', '3550308', '3304557', '5300108', '4106902', '2927408']) {
+  for (const c of ['4214805', '4202404', '3550308', '3304557', '5300108', '4106902', '2927408']) {
     assert.equal(validarCodigoIbge(c).ok, true, c);
   }
 });
