@@ -5,6 +5,7 @@ import { CardsIndicadores } from './components/CardsIndicadores';
 import { Carregando, Erro, Vazio } from './components/Estados';
 import { Filtros } from './components/Filtros';
 import { FonteDados } from './components/FonteDados';
+import { RelatoriosExportacao } from './components/RelatoriosExportacao';
 import { SeletorIndicador } from './components/SeletorIndicador';
 import { TabelaDados } from './components/TabelaDados';
 import { ThemeToggle } from './components/ThemeToggle';
@@ -118,6 +119,7 @@ export default function App() {
           )}
         </section>
         {resposta ? <FonteDados meta={resposta.meta} /> : null}
+        <RelatoriosExportacao filtros={filtros} municipio={municipio} registros={resposta?.dados ?? []} consultaCompleta={resposta?.consulta} disponivel={!!resposta && resposta.dados.length > 0} />
         <Acessibilidade />
       </main>
       <footer className="rodape">

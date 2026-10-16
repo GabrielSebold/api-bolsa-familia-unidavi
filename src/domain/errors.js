@@ -37,3 +37,13 @@ export class ExternalError extends Error {
     this.status = status;
   }
 }
+export const formatoInvalido = (motivo) => new AppError('FORMATO_INVALIDO', 400, `Formato inválido: ${motivo}`);
+export const filtroInvalido = (motivo) => new AppError('FILTRO_INVALIDO', 400, `Filtro inválido: ${motivo}`);
+export const semRegistros = (porFiltro = false) =>
+  new AppError(
+    'SEM_REGISTROS',
+    404,
+    porFiltro
+      ? 'Nenhum registro atende aos filtros informados.'
+      : 'Nenhum registro encontrado para o período consultado.',
+  );
