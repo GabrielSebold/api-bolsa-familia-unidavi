@@ -18,6 +18,7 @@ import { startPreload } from './jobs/preload.js';
 import repassesRoutes from './routes/repasses.js';
 import saudeRoutes from './routes/saude.js';
 import cacheRoutes from './routes/cache.js';
+import exportacaoRoutes from './routes/exportacao.js';
 
 const REDACT = {
   paths: [
@@ -104,7 +105,10 @@ export async function buildApp({ env, overrides = {} }) {
 
   const preload = startPreload({ env, service, cache, logger: log, now });
 
-  await app.register(cors, { origin: env.CORS_ORIGIN === '*' ? true : env.CORS_ORIGIN.split(',').map((s) => s.trim()) });
+  await app.register(cors, {
+    origin: env.CORS_ORIGIN === '*' ? true : env.CORS_ORIGIN.split(',').map((s) => s.trim()),
+    exposedHeaders: ['Content-Disposition', 'X-Total-Registros'],
+  });
   await app.register(swagger, {
     openapi: {
       openapi: '3.0.3',
@@ -117,6 +121,7 @@ export async function buildApp({ env, overrides = {} }) {
       servers: [{ url: `http://localhost:${env.PORT}`, description: 'Local' }],
       tags: [
         { name: 'Repasses', description: 'Consulta de repasses por município' },
+        { name: 'Relatórios', description: 'Exportação de dados em CSV, JSON e PDF' },
         { name: 'Saúde', description: 'Estado do módulo' },
         { name: 'Administração', description: 'Operações protegidas por token' },
       ],
@@ -161,6 +166,7 @@ export async function buildApp({ env, overrides = {} }) {
   });
 
   await app.register(repassesRoutes, { service });
+  await app.register(exportacaoRoutes, { service, now });
   await app.register(saudeRoutes, { getSaude });
   if (env.ADMIN_TOKEN) await app.register(cacheRoutes, { service, adminToken: env.ADMIN_TOKEN });
 

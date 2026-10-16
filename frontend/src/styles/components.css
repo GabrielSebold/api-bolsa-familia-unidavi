@@ -173,6 +173,21 @@
   flex-wrap: wrap;
   gap: var(--espaco-3);
 }
+.relatorios {
+  margin-block: var(--espaco-5);
+  padding: var(--espaco-4);
+  border: 1px solid var(--cor-borda-suave);
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+.relatorios__contexto { padding: var(--espaco-3); border-left: 4px solid var(--cor-primaria); background: var(--cor-fundo); }
+.relatorios__escopo { display: flex; flex-wrap: wrap; gap: var(--espaco-2); border: 0; padding: 0; margin-block: var(--espaco-3); }
+.relatorios__previa { margin-block: var(--espaco-4); }
+.relatorios__previa summary { min-height: var(--alvo-minimo); display: flex; align-items: center; cursor: pointer; color: var(--cor-link); font-weight: 700; }
+.tabela--exportacao th { white-space: nowrap; }
+.tabela--exportacao td:nth-child(n+4) { text-align: right; white-space: nowrap; }
+.relatorios__nota { margin: var(--espaco-2); color: var(--cor-texto-suave); font-size: .9rem; }
+.relatorios__acoes { margin-block: var(--espaco-3); }
 .campo {
   display: flex;
   flex-direction: column;

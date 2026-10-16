@@ -1,4 +1,4 @@
-import test, { after } from 'node:test';
+﻿import test, { after } from 'node:test';
 import assert from 'node:assert/strict';
 import { Writable } from 'node:stream';
 import { loadEnv } from '../src/config/env.js';
@@ -53,6 +53,39 @@ test('/ redireciona e OpenAPI lista as rotas', async () => {
   assert.equal(r.headers.location, '/docs');
   const j = (await app.inject('/docs/json')).json();
   assert.ok(j.paths['/api/v1/repasses'] && j.paths['/api/v1/saude']);
+  assert.ok(j.paths['/api/v1/repasses/exportar/csv'] && j.paths['/api/v1/repasses/exportar/json'] && j.paths['/api/v1/repasses/exportar/pdf']);
+});
+
+test('exportações CSV, JSON e PDF funcionam em modo mock e filtram registros', async () => {
+  const app = await criar();
+  const baseUrl = '/api/v1/repasses/exportar/';
+  const query = 'codigoIbge=4214805&de=202301&ate=202302';
+  const csv = await app.inject(`${baseUrl}csv?${query}&excel=true`);
+  assert.equal(csv.statusCode, 200);
+  assert.match(csv.headers['content-type'], /text\/csv/);
+  assert.match(csv.headers['content-disposition'], /attachment; filename=/);
+  assert.equal(csv.headers['x-total-registros'], '2');
+  assert.ok(csv.body.startsWith('\uFEFF'));
+  assert.ok(csv.body.includes('Código IBGE;Município;UF'));
+  const filtered = await app.inject(`${baseUrl}json?${query}&escopo=filtrado&valorMin=999999999`);
+  assert.equal(filtered.statusCode, 404);
+  assert.equal(filtered.json().erro.codigo, 'SEM_REGISTROS');
+  const json = await app.inject(`${baseUrl}json?${query}&escopo=filtrado&programa=AUXILIO_BRASIL`);
+  assert.equal(json.statusCode, 200);
+  assert.equal(json.json().dados.length, 2);
+  assert.equal(json.json().meta.origem, 'mock');
+  const periodoFiltrado = await app.inject(`${baseUrl}json?codigoIbge=4214805&de=202301&ate=202301&escopo=filtrado`);
+  assert.equal(periodoFiltrado.statusCode, 200);
+  assert.ok(periodoFiltrado.json().dados.every((r) => r.mesAno === '202301'));
+  const pdf = await app.inject(`${baseUrl}pdf?${query}`);
+  assert.equal(pdf.statusCode, 200);
+  assert.match(pdf.headers['content-type'], /application\/pdf/);
+  assert.ok(pdf.body.startsWith('%PDF-1.4'));
+  assert.equal(pdf.headers['x-total-registros'], '2');
+  const pdfFiltrado = await app.inject(`${baseUrl}pdf?codigoIbge=4214805&de=202301&ate=202301&escopo=filtrado`);
+  assert.equal(pdfFiltrado.statusCode, 200);
+  assert.equal(pdfFiltrado.headers['x-total-registros'], '1');
+  assert.notEqual(pdfFiltrado.body, pdf.body);
 });
 
 test('DELETE /api/v1/cache: 404 sem ADMIN_TOKEN; 401/200 com', async () => {
@@ -81,3 +114,5 @@ test('header chave-api-dados é mascarado nos logs', async () => {
   assert.ok(saida.includes('[REDACTED]'));
   assert.ok(!saida.includes('SEGREDO-123'));
 });
+
+
