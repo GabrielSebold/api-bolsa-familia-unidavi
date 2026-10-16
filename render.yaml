@@ -1,0 +1,39 @@
+﻿# Primeira publicacao demonstrativa. O plano free nao comprova RNF06.
+services:
+  - type: web
+    name: bolsa-familia-api
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm test
+    startCommand: npm start
+    healthCheckPath: /api/v1/saude
+    envVars:
+      - key: NODE_VERSION
+        value: 22.16.0
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: LOG_PRETTY
+        value: "false"
+      - key: USE_MOCK
+        value: "false"
+      - key: PORTAL_TRANSPARENCIA_API_KEY
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: DB_PATH
+        value: /tmp/bolsa-familia/cache.sqlite
+      - key: PRELOAD_ENABLED
+        value: "false"
+  - type: web
+    name: bolsa-familia-painel
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci --include=dev && npm test && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: NODE_VERSION
+        value: 22.16.0
+      - key: VITE_API_URL
+        sync: false
