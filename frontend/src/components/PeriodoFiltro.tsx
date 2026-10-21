@@ -85,53 +85,76 @@ function MesAnoSelects({
           </select>
         </div>
       </div>
-      {erro ? (
-        <p id={idErro} className="campo__erro" role="alert">
-          {erro}
-        </p>
-      ) : null}
     </fieldset>
   );
 }
 
-/** Período em dois grupos de selects (mês/ano de início e de fim), sem meses futuros. */
+/**
+ * Período em dois grupos de selects (mês/ano de início e de fim), sem meses futuros.
+ * O grupo externo é um div role="group" (e não fieldset/legend) para participar da grade (subgrid)
+ * dos filtros: controles numa linha e mensagens (erros e dica) na outra.
+ */
 export function PeriodoFiltro({ de, ate, erros, onChange }: PeriodoFiltroProps) {
   const id = useId();
   const atual = mesAtual();
+  const idTitulo = `${id}-titulo`;
+  const idErroDe = `${id}-erro-de`;
+  const idErroAte = `${id}-erro-ate`;
   const idErroPeriodo = `${id}-erro-periodo`;
   return (
-    <fieldset className="grupo-campos grupo-campos--periodo" aria-describedby={erros.periodo ? idErroPeriodo : undefined}>
-      <legend>Período</legend>
-      <div className="periodo__grupos">
-        <MesAnoSelects
-          legenda="Início"
-          valor={de}
-          atual={atual}
-          erro={erros.de}
-          erroPeriodo={erros.periodo}
-          idErro={`${id}-erro-de`}
-          idErroPeriodo={idErroPeriodo}
-          idBase={`${id}-de`}
-          onChange={(v) => onChange({ de: v, ate })}
-        />
-        <MesAnoSelects
-          legenda="Fim"
-          valor={ate}
-          atual={atual}
-          erro={erros.ate}
-          erroPeriodo={erros.periodo}
-          idErro={`${id}-erro-ate`}
-          idErroPeriodo={idErroPeriodo}
-          idBase={`${id}-ate`}
-          onChange={(v) => onChange({ de, ate: v })}
-        />
+    <div
+      role="group"
+      className="grupo-campos grupo-campos--periodo"
+      aria-labelledby={idTitulo}
+      aria-describedby={erros.periodo ? idErroPeriodo : undefined}
+    >
+      <div className="periodo__controles">
+        <span id={idTitulo} className="grupo-campos__titulo">
+          Período
+        </span>
+        <div className="periodo__grupos">
+          <MesAnoSelects
+            legenda="Início"
+            valor={de}
+            atual={atual}
+            erro={erros.de}
+            erroPeriodo={erros.periodo}
+            idErro={idErroDe}
+            idErroPeriodo={idErroPeriodo}
+            idBase={`${id}-de`}
+            onChange={(v) => onChange({ de: v, ate })}
+          />
+          <MesAnoSelects
+            legenda="Fim"
+            valor={ate}
+            atual={atual}
+            erro={erros.ate}
+            erroPeriodo={erros.periodo}
+            idErro={idErroAte}
+            idErroPeriodo={idErroPeriodo}
+            idBase={`${id}-ate`}
+            onChange={(v) => onChange({ de, ate: v })}
+          />
+        </div>
       </div>
-      {erros.periodo ? (
-        <p id={idErroPeriodo} className="campo__erro" role="alert">
-          {erros.periodo}
-        </p>
-      ) : null}
-      <p className="campo__dica">Máximo de 36 meses, de {ANO_MINIMO} até o mês atual.</p>
-    </fieldset>
+      <div className="campo__mensagens">
+        {erros.de ? (
+          <p id={idErroDe} className="campo__erro" role="alert">
+            {erros.de}
+          </p>
+        ) : null}
+        {erros.ate ? (
+          <p id={idErroAte} className="campo__erro" role="alert">
+            {erros.ate}
+          </p>
+        ) : null}
+        {erros.periodo ? (
+          <p id={idErroPeriodo} className="campo__erro" role="alert">
+            {erros.periodo}
+          </p>
+        ) : null}
+        <p className="campo__dica">Máximo de 36 meses, de {ANO_MINIMO} até o mês atual.</p>
+      </div>
+    </div>
   );
 }

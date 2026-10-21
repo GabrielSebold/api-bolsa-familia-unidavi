@@ -35,7 +35,7 @@ export function Filtros({
   const [erroMunicipio, setErroMunicipio] = useState<string | undefined>();
   const formulario = useRef<HTMLFormElement>(null);
 
-  // A URL mudou (Voltar/Avançar, Restaurar padrão): o rascunho acompanha.
+  // A URL mudou (Voltar/Avançar, Limpar filtros): o rascunho acompanha.
   useEffect(() => {
     setIbge(filtros.ibge);
     setPeriodo({ de: filtros.de, ate: filtros.ate });
@@ -56,12 +56,13 @@ export function Filtros({
       });
       return;
     }
-    if (ibge !== null) onAplicar({ ibge, de: periodo.de, ate: periodo.ate, ind: filtros.ind });
+    // Mantém o indicador e a aba abertos; "Limpar filtros" (restaurarPadrao) volta para a Visão geral.
+    if (ibge !== null) onAplicar({ ibge, de: periodo.de, ate: periodo.ate, ind: filtros.ind, aba: filtros.aba });
   };
 
   const restaurar = () => {
     const p = filtrosPadrao();
-    setIbge(p.ibge);
+    setIbge(null);
     setPeriodo({ de: p.de, ate: p.ate });
     setErroPeriodo({});
     setErroMunicipio(undefined);
@@ -69,7 +70,7 @@ export function Filtros({
   };
 
   return (
-    <section id="filtros" aria-labelledby="titulo-filtros" tabIndex={-1}>
+    <section id="filtros" className="faixa-abrangencia" aria-labelledby="titulo-filtros" tabIndex={-1}>
       <h2 id="titulo-filtros">Filtros</h2>
       {avisos.length > 0 ? (
         <div className="aviso" role="status">
@@ -106,7 +107,7 @@ export function Filtros({
             Aplicar
           </button>
           <button type="button" className="botao" onClick={restaurar}>
-            Restaurar padrão
+            Limpar filtros
           </button>
         </div>
       </form>

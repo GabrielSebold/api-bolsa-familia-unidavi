@@ -29,25 +29,33 @@ interface CardProps {
   anterior: PontoSerie | null;
 }
 
-function textoComparacao(metrica: Metrica, atual: PontoSerie, anterior: PontoSerie | null): { seta: string; texto: string } {
-  if (!anterior) return { seta: '', texto: 'sem mês anterior no período' };
+/** Classe da pílula: a direção vem da Variacao já calculada; sem comparação possível = neutra. */
+type DirecaoPilula = 'alta' | 'queda' | 'neutra';
+
+function textoComparacao(
+  metrica: Metrica,
+  atual: PontoSerie,
+  anterior: PontoSerie | null,
+): { seta: string; texto: string; direcao: DirecaoPilula } {
+  if (!anterior) return { seta: '', texto: 'sem mês anterior no período', direcao: 'neutra' };
   const nomeAnterior = formatarMesAno(anterior.mesAno);
   const valorAnterior = valorDaMetrica(anterior, metrica);
-  if (valorAnterior === null) return { seta: '', texto: `sem dados em ${nomeAnterior} para comparar` };
+  if (valorAnterior === null) return { seta: '', texto: `sem dados em ${nomeAnterior} para comparar`, direcao: 'neutra' };
   const variacao = calcularVariacao(valorDaMetrica(atual, metrica), valorAnterior);
-  if (!variacao) return { seta: '', texto: `variação indisponível em relação a ${nomeAnterior}` };
+  if (!variacao) return { seta: '', texto: `variação indisponível em relação a ${nomeAnterior}`, direcao: 'neutra' };
   const { seta, texto } = textoVariacao(variacao, metrica);
-  return { seta, texto: `${texto} em relação a ${nomeAnterior}` };
+  const direcao = variacao.direcao === 'estavel' ? 'neutra' : variacao.direcao;
+  return { seta, texto: `${texto} em relação a ${nomeAnterior}`, direcao };
 }
 
 function Card({ metrica, atual, anterior }: CardProps) {
   const valor = valorDaMetrica(atual, metrica);
-  const { seta, texto } = textoComparacao(metrica, atual, anterior);
+  const { seta, texto, direcao } = textoComparacao(metrica, atual, anterior);
   return (
-    <li className="card-indicador">
+    <li className={metrica === 'valor' ? 'card-indicador card-indicador--destaque' : 'card-indicador'}>
       <h3 className="card-indicador__titulo">{TITULO_CARD[metrica]}</h3>
       <p className="card-indicador__valor">{valor === null ? VAZIO : formatarMetrica(valor, metrica)}</p>
-      <p className="card-indicador__variacao">
+      <p className={`card-indicador__variacao pilula pilula--${direcao}`}>
         {seta ? (
           <span className="card-indicador__seta" aria-hidden="true">
             {seta}{' '}

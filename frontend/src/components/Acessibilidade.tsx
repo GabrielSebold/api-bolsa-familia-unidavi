@@ -22,10 +22,10 @@ export function Acessibilidade() {
               <kbd>2</kbd> Filtros
             </li>
             <li>
-              <kbd>3</kbd> Indicadores e gráficos
+              <kbd>3</kbd> Abre a aba Gráficos
             </li>
             <li>
-              <kbd>4</kbd> Tabela de dados
+              <kbd>4</kbd> Abre a aba Tabela
             </li>
           </ul>
         </div>
@@ -34,7 +34,11 @@ export function Acessibilidade() {
           <ul>
             <li>
               <kbd>Tab</kbd> e <kbd>Shift</kbd> + <kbd>Tab</kbd> percorrem os controles. O primeiro <kbd>Tab</kbd>{' '}
-              mostra o link &quot;Ir para o conteúdo&quot;.
+              leva ao atalho &quot;Ir para o conteúdo [1]&quot;, no topo da página.
+            </li>
+            <li>
+              Nas abas Visão geral, Gráficos e Tabela, use <kbd>←</kbd> e <kbd>→</kbd> (ou <kbd>Home</kbd> e{' '}
+              <kbd>End</kbd>) para trocar de aba.
             </li>
             <li>
               No campo de município, digite ao menos 2 letras (ou o código de 7 dígitos), use <kbd>↑</kbd> e{' '}
@@ -48,13 +52,17 @@ export function Acessibilidade() {
         <div>
           <h3>Texto e cores</h3>
           <ul>
-            <li>Os botões A-, Padrão e A+ no topo da página mudam o tamanho do texto. A escolha fica salva.</li>
             <li>
-              O tema Claro, Escuro ou Automático (segue o sistema) fica no cabeçalho. A escolha fica salva.
+              Os atalhos e os botões A-, Padrão e A+ ficam na barra do topo da página. A- e A+ mudam o tamanho do
+              texto, e a escolha fica salva.
             </li>
             <li>
-              Os gráficos usam cores seguras para daltonismo, além de padrões, marcadores e textos. Cada gráfico tem
-              descrição em texto e tabela com os mesmos dados.
+              O tema Claro, Escuro, Alto contraste ou Automático (segue o sistema) fica no cabeçalho. A escolha fica
+              salva.
+            </li>
+            <li>
+              As cores dos gráficos seguem a paleta do gov.br e vêm sempre acompanhadas de padrões, marcadores e
+              textos. Cada gráfico tem descrição em texto e tabela com os mesmos dados.
             </li>
           </ul>
         </div>

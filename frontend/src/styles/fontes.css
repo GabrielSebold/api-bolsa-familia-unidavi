@@ -1,0 +1,28 @@
+/*
+ * Rawline, fonte do gov.br Design System, carregada do CDN oficial do DS.
+ * Só 3 pesos normais; sem rede, cai para Raleway/sans-serif (ver --fonte-base).
+ */
+
+@font-face {
+  font-family: 'Rawline';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://cdngovbr-ds.estaleiro.serpro.gov.br/design-system/fonts/rawline/font/rawline-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Rawline';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('https://cdngovbr-ds.estaleiro.serpro.gov.br/design-system/fonts/rawline/font/rawline-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Rawline';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://cdngovbr-ds.estaleiro.serpro.gov.br/design-system/fonts/rawline/font/rawline-700.woff2') format('woff2');
+}

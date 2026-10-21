@@ -1,4 +1,4 @@
-import type { Municipio } from '../types/api';
+import type { Municipio, Registro } from '../types/api';
 
 export const MAX_RESULTADOS = 50;
 export const MIN_CARACTERES = 2;
@@ -41,4 +41,21 @@ export function buscarMunicipios(
 /** "Rio do Sul/SC" */
 export function rotuloMunicipio(m: Municipio): string {
   return `${m.nome}/${m.uf}`;
+}
+
+/**
+ * Nome exibido do município consultado (trilha, título, contexto e anúncio).
+ * Prioridade: lista de municípios (IBGE) → registros da API → "Município 1234567". Null sem município.
+ */
+export function nomeMunicipio(
+  ibge: string | null,
+  municipios: readonly Municipio[],
+  registros: readonly Registro[],
+): string | null {
+  if (!ibge) return null;
+  const daLista = municipios.find((m) => m.codigo === ibge);
+  if (daLista) return rotuloMunicipio(daLista);
+  const daApi = registros.find((r) => r.codigoIbge === ibge);
+  if (daApi) return `${daApi.municipio}/${daApi.uf}`;
+  return `Município ${ibge}`;
 }

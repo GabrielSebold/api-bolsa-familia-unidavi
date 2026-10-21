@@ -49,7 +49,8 @@ Encerramento gracioso em `SIGINT`/`SIGTERM` (fecha o servidor, o SQLite e o agen
 
 ## Frontend
 
-Existe um dashboard web (React + Vite) em [`frontend/`](frontend/README.md) que consome esta API. Com a API em mock (`USE_MOCK=true npm start`), rode `cd frontend && npm install && npm run dev` e abra http://localhost:5173.
+Existe um dashboard web (React + Vite) em [`frontend/`](frontend/README.md) que consome esta API. Com a API em mock (`USE_MOCK=true npm start`), rode `cd frontend && npm install && npm run dev` e abra http://localhost:5173. O visual segue o padrão gov.br (Design System reimplementado em CSS próprio) e o painel abre sem município pré-selecionado.
+O painel tem abas Visão geral, Gráficos e Tabela, e a aba aberta entra no link compartilhável (`?aba=graficos` ou `?aba=tabela`).
 
 ## Endpoints
 

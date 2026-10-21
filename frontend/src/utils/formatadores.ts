@@ -26,6 +26,11 @@ const percentualAbsoluto = new Intl.NumberFormat(LOCALE, {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
 });
+const percentualDuasCasas = new Intl.NumberFormat(LOCALE, {
+  style: 'percent',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
 const dataFmt = new Intl.DateTimeFormat(LOCALE, { timeZone: FUSO, day: '2-digit', month: '2-digit', year: 'numeric' });
 const horaFmt = new Intl.DateTimeFormat(LOCALE, { timeZone: FUSO, hour: '2-digit', minute: '2-digit', hour12: false });
 
@@ -63,6 +68,11 @@ export function formatarPercentual(v: number | null | undefined): string {
 /** Percentual sem sinal (o texto já diz "aumento"/"queda"). Recebe unidades de porcentagem. */
 export function formatarPercentualSemSinal(v: number | null | undefined): string {
   return ehNumero(v) ? percentualAbsoluto.format(Math.abs(v) / 100) : VAZIO;
+}
+
+/** Participação com 2 casas, sem sinal ("100,00%"), para barras de resumo e ranking. Recebe unidades de porcentagem. */
+export function formatarPercentualDuasCasas(v: number | null | undefined): string {
+  return ehNumero(v) ? percentualDuasCasas.format(Math.abs(v) / 100) : VAZIO;
 }
 
 const NOMES_PROGRAMA: Record<string, string> = {

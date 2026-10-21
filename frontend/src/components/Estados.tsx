@@ -38,6 +38,19 @@ export function Erro({ erro, onTentarNovamente }: ErroProps) {
   );
 }
 
+/** Estado inicial, antes de o usuário escolher um município. Conteúdo estático: não é anunciado. */
+export function EstadoInicial() {
+  return (
+    <div className="estado estado--inicial">
+      <h3 className="estado__titulo">Escolha um município para ver os dados</h3>
+      <p>
+        Nos filtros acima, digite o nome ou o código IBGE do município, escolha o período (mês e ano de início e de
+        fim) e selecione Aplicar.
+      </p>
+    </div>
+  );
+}
+
 export function Vazio() {
   return (
     <div className="estado estado--vazio" role="status">

@@ -4,8 +4,6 @@ import type { Municipio } from '../types/api';
 import { MIN_CARACTERES, buscarMunicipios, rotuloMunicipio } from '../utils/busca';
 import { validarCodigoIbge } from '../utils/ibge';
 
-export const ATALHO_MUNICIPIO: Municipio = { codigo: '4214805', nome: 'Rio do Sul', uf: 'SC' };
-
 interface MunicipioComboboxProps {
   municipios: readonly Municipio[];
   fonte: FonteMunicipios | null;
@@ -48,7 +46,7 @@ export function MunicipioCombobox({ municipios, fonte, valor, erro, onChange }: 
   const raiz = useRef<HTMLDivElement>(null);
   const emitido = useRef<string | null>(valor);
 
-  // Sincroniza o texto quando o valor muda por fora (Restaurar padrão, Voltar do navegador)
+  // Sincroniza o texto quando o valor muda por fora (Limpar filtros, Voltar do navegador)
   // ou quando a lista de municípios chega e o código passa a ter um nome.
   useEffect(() => {
     if (valor !== emitido.current) {
@@ -175,64 +173,71 @@ export function MunicipioCombobox({ municipios, fonte, valor, erro, onChange }: 
 
   return (
     <div className="campo campo--municipio">
-      <label htmlFor={idInput}>Município</label>
-      <div className="combobox" ref={raiz} onBlur={aoPerderFoco}>
-        <input
-          id={idInput}
-          type="text"
-          role="combobox"
-          inputMode="search"
-          autoComplete="off"
-          spellCheck={false}
-          value={texto}
-          aria-expanded={aberto}
-          aria-controls={idLista}
-          aria-autocomplete="list"
-          aria-activedescendant={aberto && ativo >= 0 ? `${idLista}-${ativo}` : undefined}
-          aria-invalid={mensagemErro ? true : undefined}
-          aria-describedby={mensagemErro ? `${idDica} ${idErro}` : idDica}
-          onChange={(e) => aoDigitar(e.target.value)}
-          onKeyDown={aoTeclar}
-          onFocus={() => setFoco(true)}
-        />
-        <ul id={idLista} role="listbox" aria-label="Municípios sugeridos" className="combobox__lista" hidden={!aberto}>
-          {resultados.map((m, i) => (
-            <li
-              key={m.codigo}
-              id={`${idLista}-${i}`}
-              role="option"
-              aria-selected={i === ativo}
-              className="combobox__opcao"
-              // Mantém o foco no campo ao clicar na opção.
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={() => selecionar(m)}
-            >
-              <span>{rotuloMunicipio(m)}</span>
-              <span className="combobox__codigo">{m.codigo}</span>
-            </li>
-          ))}
-        </ul>
+      <div className="campo__controle">
+        <label htmlFor={idInput}>Município</label>
+        <div className="combobox" ref={raiz} onBlur={aoPerderFoco}>
+          <svg className="combobox__pin" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path
+              fill="currentColor"
+              d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"
+            />
+          </svg>
+          <input
+            id={idInput}
+            type="text"
+            role="combobox"
+            inputMode="search"
+            autoComplete="off"
+            spellCheck={false}
+            value={texto}
+            aria-expanded={aberto}
+            aria-controls={idLista}
+            aria-autocomplete="list"
+            aria-activedescendant={aberto && ativo >= 0 ? `${idLista}-${ativo}` : undefined}
+            aria-invalid={mensagemErro ? true : undefined}
+            aria-describedby={mensagemErro ? `${idDica} ${idErro}` : idDica}
+            onChange={(e) => aoDigitar(e.target.value)}
+            onKeyDown={aoTeclar}
+            onFocus={() => setFoco(true)}
+          />
+          <ul id={idLista} role="listbox" aria-label="Municípios sugeridos" className="combobox__lista" hidden={!aberto}>
+            {resultados.map((m, i) => (
+              <li
+                key={m.codigo}
+                id={`${idLista}-${i}`}
+                role="option"
+                aria-selected={i === ativo}
+                className="combobox__opcao"
+                // Mantém o foco no campo ao clicar na opção.
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => selecionar(m)}
+              >
+                <span>{rotuloMunicipio(m)}</span>
+                <span className="combobox__codigo">{m.codigo}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <p id={idDica} className="campo__dica">
-        Digite ao menos {MIN_CARACTERES} letras do nome ou o código IBGE de 7 dígitos.
-      </p>
-      {semResultados ? <p className="campo__dica">Nenhum município encontrado.</p> : null}
-      {mensagemErro ? (
-        <p id={idErro} className="campo__erro" role="alert">
-          {mensagemErro}
+      <div className="campo__mensagens">
+        <p id={idDica} className="campo__dica">
+          Digite ao menos {MIN_CARACTERES} letras do nome ou o código IBGE de 7 dígitos.
         </p>
-      ) : null}
-      <div className="somente-leitor" role="status">
-        {anuncio}
+        {semResultados ? <p className="campo__dica">Nenhum município encontrado.</p> : null}
+        {mensagemErro ? (
+          <p id={idErro} className="campo__erro" role="alert">
+            {mensagemErro}
+          </p>
+        ) : null}
+        <div className="somente-leitor" role="status">
+          {anuncio}
+        </div>
+        {aviso ? (
+          <p className="campo__dica campo__dica--aviso" role="note">
+            {aviso}
+          </p>
+        ) : null}
       </div>
-      <button type="button" className="botao botao--link" onClick={() => selecionar(ATALHO_MUNICIPIO)}>
-        {rotuloMunicipio(ATALHO_MUNICIPIO)} ({ATALHO_MUNICIPIO.codigo})
-      </button>
-      {aviso ? (
-        <p className="campo__dica campo__dica--aviso" role="note">
-          {aviso}
-        </p>
-      ) : null}
     </div>
   );
 }

@@ -1,19 +1,34 @@
-/* Skip link: invisível até receber foco pelo teclado. */
-.skip-link {
-  position: absolute;
-  top: 0;
-  left: var(--espaco-2);
-  z-index: 100;
-  padding: var(--espaco-3) var(--espaco-4);
-  background: var(--cor-primaria);
-  color: var(--cor-primaria-texto);
-  font-weight: 600;
-  border-radius: 0 0 var(--raio) var(--raio);
-  transform: translateY(-120%);
+/*
+ * Painéis: a página fica em --cor-superficie e cada seção-cartão em --cor-fundo, com raio e sombra.
+ * A borda transparente mantém o tamanho e aparece no alto contraste (e no modo de cores forçadas).
+ */
+.faixa-abrangencia,
+.card-indicador,
+.grafico,
+.fonte,
+.relatorios,
+.acessibilidade,
+.resumo,
+.ranking-meses {
+  border: 1px solid transparent;
+  border-radius: var(--raio-painel);
+  background: var(--cor-fundo);
+  box-shadow: var(--sombra-1);
 }
 
-.skip-link:focus {
-  transform: translateY(0);
+[data-theme='contraste'] :is(.faixa-abrangencia, .card-indicador, .grafico, .fonte, .relatorios, .acessibilidade, .resumo, .ranking-meses) {
+  border-color: var(--cor-borda-suave);
+}
+
+[data-theme='contraste'] .card-indicador {
+  border-top-color: var(--cor-primaria);
+}
+
+.fonte,
+.acessibilidade,
+.resumo,
+.ranking-meses {
+  padding: var(--espaco-4);
 }
 
 .link-atalho {
@@ -30,7 +45,7 @@
   font-size: 0.85em;
 }
 
-/* Botões */
+/* Botões (br-button): pílula; .botao = secundário, .botao--primario = primário. */
 .botao {
   display: inline-flex;
   align-items: center;
@@ -38,12 +53,13 @@
   gap: var(--espaco-2);
   min-height: var(--alvo-minimo);
   min-width: var(--alvo-minimo);
-  padding: var(--espaco-2) var(--espaco-4);
-  border: 2px solid var(--cor-borda);
-  border-radius: var(--raio);
+  padding: var(--espaco-2) 1.5rem;
+  border: 1px solid var(--cor-primaria);
+  border-radius: var(--raio-pilula);
   background: var(--cor-fundo);
-  color: var(--cor-texto);
+  color: var(--cor-primaria);
   font-weight: 600;
+  line-height: 1.25;
   cursor: pointer;
 }
 
@@ -53,7 +69,7 @@
 
 .botao:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.45;
 }
 
 .botao--primario {
@@ -63,7 +79,8 @@
 }
 
 .botao--primario:hover:not(:disabled) {
-  filter: brightness(1.1);
+  border-color: var(--cor-primaria-escura);
+  background: var(--cor-primaria-escura);
 }
 
 .grupo-botoes {
@@ -83,12 +100,40 @@
   content: '\2713';
 }
 
+/*
+ * Mensagens (br-message): fundo claro, faixa lateral de destaque e ícone decorativo
+ * (content com texto alternativo vazio, para o leitor de tela não ler o símbolo).
+ * .estado e .aviso--info = informação; .aviso e .campo__dica--aviso = alerta; .estado--erro = erro.
+ */
+.estado,
+.aviso,
+.campo__dica--aviso {
+  position: relative;
+  border: 0;
+  border-left: 0.5rem solid var(--cor-info-destaque);
+  border-radius: var(--raio);
+  background: var(--cor-info-fundo);
+  color: var(--cor-info-texto);
+}
+
+.estado::before,
+.aviso::before,
+.campo__dica--aviso::before {
+  position: absolute;
+  top: var(--espaco-3);
+  left: var(--espaco-3);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
 /* Estados (carregando, erro, vazio) */
 .estado {
-  padding: var(--espaco-4) var(--espaco-5);
-  border: 2px solid var(--cor-borda);
-  border-radius: var(--raio);
-  background: var(--cor-superficie);
+  padding: var(--espaco-4) var(--espaco-5) var(--espaco-4) 2.75rem;
+}
+
+.estado::before {
+  content: '\2139' / '';
+  top: var(--espaco-4);
 }
 
 .estado > :last-child {
@@ -108,6 +153,12 @@
   display: flex;
   align-items: center;
   gap: var(--espaco-3);
+  padding-left: var(--espaco-5);
+}
+
+/* No carregando o spinner já faz o papel de ícone. */
+.estado--carregando::before {
+  content: none;
 }
 
 .estado--carregando p {
@@ -115,9 +166,13 @@
 }
 
 .estado--erro {
-  border-color: var(--cor-erro-texto);
+  border-left-color: var(--cor-erro-destaque);
   background: var(--cor-erro-fundo);
   color: var(--cor-erro-texto);
+}
+
+.estado--erro::before {
+  content: '\2716' / '';
 }
 
 .estado--erro .estado__codigo {
@@ -146,41 +201,62 @@
 
 /* Avisos */
 .aviso {
-  padding: var(--espaco-3) var(--espaco-4);
-  border: 2px solid var(--cor-aviso-texto);
-  border-radius: var(--raio);
+  padding: var(--espaco-3) var(--espaco-4) var(--espaco-3) 2.75rem;
+  border-left-color: var(--cor-aviso-destaque);
   background: var(--cor-aviso-fundo);
   color: var(--cor-aviso-texto);
 }
 
+.aviso::before,
+.campo__dica--aviso::before {
+  content: '\26A0' / '';
+}
+
 .aviso--info {
-  border-color: var(--cor-info-texto);
+  border-left-color: var(--cor-info-destaque);
   background: var(--cor-info-fundo);
   color: var(--cor-info-texto);
+}
+
+.aviso--info::before {
+  content: '\2139' / '';
+}
+
+/*
+ * Barra de abrangência (#filtros): faixa em painel logo abaixo do título, no estilo da barra
+ * de abrangência do TSE. Não é fixa (sticky): cobriria a tela em 320px/zoom 200% e esconderia o foco.
+ * É contêiner de consulta para posicionar os botões conforme a largura real (inclusive com A+).
+ */
+.faixa-abrangencia {
+  container: filtros / inline-size;
+  padding: var(--espaco-4);
+}
+.faixa-abrangencia > h2 {
+  margin-bottom: var(--espaco-3);
+}
+.faixa-abrangencia > .aviso {
+  margin-bottom: var(--espaco-4);
 }
 
 /* Campos de formulário */
 .filtros {
   display: grid;
   gap: var(--espaco-4);
-  padding: var(--espaco-4);
-  border: 1px solid var(--cor-borda-suave);
-  border-radius: var(--raio);
-  background: var(--cor-superficie);
 }
 .filtros__acoes {
   display: flex;
   flex-wrap: wrap;
   gap: var(--espaco-3);
 }
+/* Altura fixa no alvo mínimo (inclusive com A+), para alinhar com input e selects. */
+.filtros__acoes .botao {
+  padding-block: 0;
+}
 .relatorios {
   margin-block: var(--espaco-5);
   padding: var(--espaco-4);
-  border: 1px solid var(--cor-borda-suave);
-  border-radius: var(--raio);
-  background: var(--cor-superficie);
 }
-.relatorios__contexto { padding: var(--espaco-3); border-left: 4px solid var(--cor-primaria); background: var(--cor-fundo); }
+.relatorios__contexto { padding: var(--espaco-3); border-left: 0.5rem solid var(--cor-info-destaque); border-radius: var(--raio); background: var(--cor-info-fundo); color: var(--cor-info-texto); }
 .relatorios__escopo { display: flex; flex-wrap: wrap; gap: var(--espaco-2); border: 0; padding: 0; margin-block: var(--espaco-3); }
 .relatorios__previa { margin-block: var(--espaco-4); }
 .relatorios__previa summary { min-height: var(--alvo-minimo); display: flex; align-items: center; cursor: pointer; color: var(--cor-link); font-weight: 700; }
@@ -195,21 +271,31 @@
   min-width: 0;
 }
 .campo label,
-.grupo-campos legend {
+.grupo-campos legend,
+.grupo-campos__titulo {
   font-weight: 600;
+}
+/* Bloco do controle (rótulo + campo) e bloco das mensagens (dica, erro, aviso). */
+.campo__controle,
+.campo__mensagens {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1);
+  min-width: 0;
 }
 .campo select,
 .campo input[type='text'] {
   width: 100%;
   min-height: var(--alvo-minimo);
-  padding: var(--espaco-2) var(--espaco-3);
-  border: 2px solid var(--cor-borda);
+  padding: 0 1rem;
+  border: 1px solid var(--cor-borda);
   border-radius: var(--raio);
   background: var(--cor-fundo);
   color: var(--cor-texto);
+  font-weight: 500;
 }
 .campo [aria-invalid='true'] {
-  border-color: var(--cor-erro-texto);
+  border: 2px solid var(--cor-erro);
 }
 .campo__dica {
   margin: 0;
@@ -217,20 +303,22 @@
   font-size: 0.9rem;
 }
 .campo__dica--aviso {
-  padding: var(--espaco-2) var(--espaco-3);
-  border: 1px solid var(--cor-aviso-texto);
-  border-radius: var(--raio);
+  padding: var(--espaco-2) var(--espaco-3) var(--espaco-2) 2.5rem;
+  border-left-color: var(--cor-aviso-destaque);
   background: var(--cor-aviso-fundo);
   color: var(--cor-aviso-texto);
 }
+.campo__dica--aviso::before {
+  top: var(--espaco-2);
+}
 .campo__erro {
   margin: 0;
-  color: var(--cor-erro-texto);
+  color: var(--cor-erro);
   font-weight: 600;
   font-size: 0.95rem;
 }
 .campo__erro::before {
-  content: '\26A0\00a0';
+  content: '\26A0\00a0' / '';
 }
 .grupo-campos {
   min-width: 0;
@@ -246,24 +334,41 @@
   display: grid;
   gap: var(--espaco-2);
 }
+.periodo__controles {
+  display: grid;
+  gap: var(--espaco-1);
+  min-width: 0;
+}
+/* Base comum: se um rótulo quebrar linha, os selects continuam alinhados pela base. */
 .periodo__grupos {
   display: grid;
+  align-items: end;
   gap: var(--espaco-3);
 }
 .grupo-campos__selects {
   display: grid;
   grid-template-columns: 3fr 2fr;
+  align-items: end;
   gap: var(--espaco-2);
 }
-.botao--link {
-  align-self: flex-start;
-  border-style: dashed;
-  font-weight: 500;
-}
 
-/* Combobox de município */
+/* Combobox de município (com pin decorativo à esquerda do campo) */
 .combobox {
   position: relative;
+}
+.campo .combobox input[type='text'] {
+  padding-left: 2.75rem;
+}
+.combobox__pin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--espaco-3);
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-block: auto;
+  color: var(--cor-primaria);
+  pointer-events: none;
 }
 .combobox__lista {
   position: absolute;
@@ -275,10 +380,10 @@
   padding: 0;
   overflow-y: auto;
   list-style: none;
-  border: 2px solid var(--cor-borda);
+  border: 1px solid var(--cor-borda);
   border-radius: var(--raio);
   background: var(--cor-fundo);
-  box-shadow: 0 6px 16px rgb(0 0 0 / 0.25);
+  box-shadow: var(--sombra-1);
 }
 .combobox__lista[hidden] {
   display: none;
@@ -307,6 +412,7 @@
 
 /* Seletor de indicador */
 .seletor-indicador {
+  container: indicador / inline-size;
   margin: var(--espaco-5) 0 var(--espaco-4);
   padding: 0;
   border: 0;
@@ -317,19 +423,14 @@
   margin-bottom: var(--espaco-2);
   font-weight: 600;
 }
-.seletor-indicador__opcoes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--espaco-2);
-}
 .opcao-radio {
   display: inline-flex;
   align-items: center;
   gap: var(--espaco-2);
   min-height: var(--alvo-minimo);
   padding: var(--espaco-2) var(--espaco-4);
-  border: 2px solid var(--cor-borda);
-  border-radius: var(--raio);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-pilula);
   background: var(--cor-fundo);
   cursor: pointer;
 }
@@ -346,8 +447,111 @@
   font-weight: 600;
 }
 .opcao-radio:has(input:focus-visible) {
-  outline: var(--foco-largura) solid var(--cor-foco);
+  outline: var(--foco-largura) var(--foco-estilo) var(--cor-foco);
   outline-offset: var(--foco-offset);
+}
+
+/*
+ * Seletor de indicador como controle segmentado (como o "Turno 1º | 2º" do TSE) sobre radios
+ * nativos: setas e espaço funcionam sem JS. O radio fica visualmente oculto (mas focável e no
+ * leitor de tela); o estado aparece no fundo preenchido e no ✓ em texto, não só na cor.
+ */
+/* Estreito (ou com A+): segmentos empilhados, colados na vertical. */
+.seletor-indicador__opcoes {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+.seletor-indicador .opcao-radio {
+  position: relative;
+  justify-content: center;
+  border-color: var(--cor-primaria);
+  border-radius: 0;
+  color: var(--cor-texto);
+  font-weight: 600;
+}
+.seletor-indicador .opcao-radio + .opcao-radio {
+  margin-top: -1px;
+}
+.seletor-indicador .opcao-radio:first-child {
+  border-start-start-radius: var(--raio-painel);
+  border-start-end-radius: var(--raio-painel);
+}
+.seletor-indicador .opcao-radio:last-child {
+  border-end-start-radius: var(--raio-painel);
+  border-end-end-radius: var(--raio-painel);
+}
+/* Largo: segmentos lado a lado, raio de pílula só nas pontas. Medido em rem, acompanha o A+. */
+@container indicador (min-width: 36rem) {
+  .seletor-indicador__opcoes {
+    flex-direction: row;
+  }
+  .seletor-indicador .opcao-radio + .opcao-radio {
+    margin-top: 0;
+    margin-left: -1px;
+  }
+  .seletor-indicador .opcao-radio:first-child {
+    border-radius: var(--raio-pilula) 0 0 var(--raio-pilula);
+  }
+  .seletor-indicador .opcao-radio:last-child {
+    border-radius: 0 var(--raio-pilula) var(--raio-pilula) 0;
+  }
+}
+.seletor-indicador .opcao-radio input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.seletor-indicador .opcao-radio:hover:not(:has(input:checked)) {
+  background: var(--cor-superficie);
+}
+.seletor-indicador .opcao-radio:has(input:checked) {
+  z-index: 1;
+  border-color: var(--cor-primaria);
+  background: var(--cor-primaria);
+  color: var(--cor-primaria-texto);
+}
+.seletor-indicador .opcao-radio:has(input:checked) span::before {
+  content: '\2713\00a0' / '';
+}
+.seletor-indicador .opcao-radio:has(input:focus-visible) {
+  z-index: 2;
+}
+
+/*
+ * Abas do painel (Visão geral | Gráficos | Tabela), no estilo das abas de navegação do TSE:
+ * a ativa tem sublinhado grosso e negrito (não só cor). As abas quebram linha em telas estreitas
+ * ou com A+, sem rolagem horizontal.
+ */
+.abas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--espaco-2);
+  border-bottom: 1px solid var(--cor-borda-suave);
+  overflow: visible;
+}
+.abas__aba {
+  min-height: var(--alvo-minimo);
+  margin-bottom: -1px;
+  padding: var(--espaco-2) var(--espaco-4);
+  border: 0;
+  border-bottom: 4px solid transparent;
+  background: transparent;
+  color: var(--cor-texto-suave);
+  font-weight: 600;
+  cursor: pointer;
+}
+.abas__aba:hover {
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
+}
+.abas__aba[aria-selected='true'] {
+  border-bottom-color: var(--cor-primaria);
+  color: var(--cor-texto);
+  font-weight: 700;
 }
 
 /* Cards de indicadores */
@@ -373,32 +577,272 @@
 .card-indicador {
   min-width: 0;
   padding: var(--espaco-4) var(--espaco-5);
-  border: 2px solid var(--cor-borda);
-  border-radius: var(--raio);
-  background: var(--cor-superficie);
+  border-top: 4px solid var(--cor-primaria);
 }
 .card-indicador__titulo {
   margin: 0 0 var(--espaco-2);
   font-size: 1rem;
   color: var(--cor-texto-suave);
 }
+/* Número em destaque (como o % do candidato no TSE), em azul primário: 2rem; um pouco menor só em telas estreitas. */
 .card-indicador__valor {
-  margin: 0 0 var(--espaco-2);
-  font-size: 1.6rem;
+  margin: 0 0 var(--espaco-3);
+  color: var(--cor-primaria);
+  font-size: clamp(1.5rem, 1rem + 2.5vw, 2rem);
   font-weight: 700;
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 .card-indicador__variacao {
   margin: 0;
-  font-size: 0.95rem;
 }
 .card-indicador__seta {
   font-weight: 700;
+}
+/* Cartão principal (valor) com borda de destaque, como os líderes da lista do TSE; ocupa a linha toda. */
+.card-indicador--destaque {
+  grid-column: 1 / -1;
+  border: 2px solid var(--cor-primaria);
+  border-top-width: 4px;
+}
+[data-theme='contraste'] .card-indicador--destaque {
+  border-color: var(--cor-primaria);
 }
 .cards__nota {
   margin: 0;
   color: var(--cor-texto-suave);
   font-size: 0.9rem;
+}
+
+/*
+ * Pílulas (variação, origem dos dados). Seta/ícone + texto carregam o sentido; a cor só reforça.
+ * Raio de painel (não 100em) porque o texto pode quebrar linha. No alto contraste o fundo é quase
+ * preto, então a borda delimita a forma.
+ */
+.pilula {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--espaco-1);
+  max-width: 100%;
+  padding: var(--espaco-1) var(--espaco-3);
+  border: 1px solid transparent;
+  border-radius: var(--raio-painel);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.pilula--alta {
+  background: var(--cor-pilula-positivo-fundo);
+  color: var(--cor-pilula-positivo-texto);
+}
+.pilula--queda {
+  background: var(--cor-pilula-negativo-fundo);
+  color: var(--cor-pilula-negativo-texto);
+}
+.pilula--neutra {
+  border-color: var(--cor-borda-suave);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+}
+.pilula--info {
+  border-color: var(--cor-info-destaque);
+  background: var(--cor-info-fundo);
+  color: var(--cor-info-texto);
+}
+.pilula--aviso {
+  border-color: var(--cor-aviso-destaque);
+  background: var(--cor-aviso-fundo);
+  color: var(--cor-aviso-texto);
+}
+[data-theme='contraste'] .pilula {
+  border-color: var(--cor-borda-suave);
+}
+
+/*
+ * Barras de percentual: decorativas (aria-hidden), o percentual está sempre em texto ao lado.
+ * A transição de largura é zerada com movimento reduzido (aqui e no bloco global de base.css).
+ */
+.barra {
+  display: block;
+  overflow: hidden;
+  block-size: 0.75rem;
+  border-radius: var(--raio-pilula);
+  background: var(--cor-barra-trilho);
+}
+.barra--destaque {
+  block-size: 1rem;
+}
+.barra__preenchimento {
+  display: block;
+  block-size: 100%;
+  border-radius: inherit;
+  background: var(--cor-barra);
+  transition: inline-size 400ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .barra__preenchimento {
+    transition: none;
+  }
+}
+
+/* Barra empilhada (distribuição por ano): segmentos separados por 2px da cor do painel. */
+.barra-empilhada {
+  display: flex;
+  overflow: hidden;
+  block-size: 1.5rem;
+  margin-block: var(--espaco-2) var(--espaco-3);
+  border-radius: var(--raio-cartao);
+  background: var(--cor-barra-trilho);
+}
+.barra-empilhada__segmento {
+  flex-grow: 0;
+  flex-shrink: 1;
+  min-inline-size: 0;
+  box-sizing: border-box;
+}
+.barra-empilhada__segmento + .barra-empilhada__segmento {
+  border-inline-start: 2px solid var(--cor-fundo);
+}
+.barra-empilhada__segmento svg {
+  display: block;
+}
+[data-theme='contraste'] :is(.barra, .barra-empilhada) {
+  box-shadow: 0 0 0 1px var(--cor-borda);
+}
+.legenda--distribuicao {
+  flex-direction: column;
+  margin: 0;
+  font-size: 0.95rem;
+}
+.legenda--distribuicao li {
+  flex-wrap: wrap;
+  column-gap: var(--espaco-2);
+}
+.legenda__ano,
+.legenda__valor {
+  font-weight: 700;
+}
+
+/* Visão geral: resumo à esquerda (1/3) e cartões + ranking à direita (2/3) a partir de 1024px. */
+.visao-geral,
+.visao-geral__indicadores {
+  display: grid;
+  gap: var(--espaco-5);
+  min-width: 0;
+}
+
+/* Resumo do período (como o "Dados Gerais" do TSE) */
+.resumo {
+  display: grid;
+  gap: var(--espaco-3);
+  align-content: start;
+  min-width: 0;
+}
+.resumo > * {
+  margin: 0;
+}
+.resumo__municipio {
+  font-weight: 700;
+}
+.resumo__carimbo {
+  color: var(--cor-texto-suave);
+  font-size: 0.9rem;
+}
+.resumo__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-2) var(--espaco-3);
+}
+.resumo__dados {
+  margin: 0;
+}
+.resumo__dados div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 var(--espaco-3);
+  padding-block: var(--espaco-2);
+  border-bottom: 1px solid var(--cor-borda-suave);
+}
+.resumo__dados dt {
+  color: var(--cor-texto-suave);
+}
+.resumo__dados dd {
+  margin: 0 0 0 auto;
+  font-weight: 700;
+  text-align: right;
+}
+.resumo__bloco {
+  min-width: 0;
+}
+.resumo__subtitulo {
+  margin: 0 0 var(--espaco-1);
+  font-size: 1rem;
+}
+.resumo__percentual {
+  margin: 0 0 var(--espaco-2);
+  font-weight: 700;
+}
+
+/* Ranking dos meses (como a lista ranqueada do TSE); os 2 primeiros com borda de destaque. */
+.ranking-meses > h3 {
+  margin-bottom: var(--espaco-3);
+}
+.ranking {
+  display: grid;
+  gap: var(--espaco-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ranking__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--espaco-3);
+  padding: var(--espaco-3);
+  border: 1px solid var(--cor-borda-suave);
+  border-radius: var(--raio-cartao);
+}
+.ranking__item--destaque {
+  border: 2px solid var(--cor-primaria);
+}
+.ranking__posicao {
+  min-inline-size: 2.5ch;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.ranking__corpo {
+  display: grid;
+  gap: var(--espaco-1);
+  min-width: 0;
+}
+.ranking__corpo > p {
+  margin: 0;
+}
+.ranking__linha {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0 var(--espaco-3);
+}
+.ranking__mes {
+  font-weight: 600;
+}
+.ranking__valor {
+  color: var(--cor-primaria);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.ranking__detalhe {
+  color: var(--cor-texto-suave);
+  font-size: 0.9rem;
+}
+.ranking__alternar {
+  margin-top: var(--espaco-3);
 }
 
 /* Gráficos */
@@ -411,9 +855,6 @@
   min-width: 0;
   margin: 0;
   padding: var(--espaco-4);
-  border: 1px solid var(--cor-borda-suave);
-  border-radius: var(--raio);
-  background: var(--cor-fundo);
 }
 .grafico figcaption h3 {
   margin-bottom: var(--espaco-2);
@@ -463,11 +904,12 @@
 }
 .tooltip-grafico {
   padding: var(--espaco-2) var(--espaco-3);
-  border: 2px solid var(--cor-borda);
+  border: 1px solid var(--cor-borda);
   border-radius: var(--raio);
   background: var(--cor-superficie);
   color: var(--cor-texto);
   font-size: 0.9rem;
+  box-shadow: var(--sombra-1);
 }
 .tooltip-grafico p,
 .tooltip-grafico ul {
@@ -486,6 +928,7 @@
   overflow-x: auto;
   border: 1px solid var(--cor-borda-suave);
   border-radius: var(--raio);
+  background: var(--cor-fundo);
 }
 .tabela {
   width: 100%;
@@ -507,7 +950,9 @@
   overflow-wrap: normal;
 }
 .tabela thead th {
+  border-bottom: 2px solid var(--cor-borda-suave);
   background: var(--cor-superficie);
+  font-weight: 600;
   white-space: nowrap;
 }
 .tabela--resumo td,
@@ -549,14 +994,20 @@
   }
 }
 @media (min-width: 768px) {
-  .filtros {
+  .faixa-abrangencia,
+  .fonte,
+  .acessibilidade {
     padding: var(--espaco-5);
   }
   .periodo__grupos {
     grid-template-columns: 1fr 1fr;
   }
   .cards__lista {
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  }
+  .resumo,
+  .ranking-meses {
+    padding: var(--espaco-5);
   }
   .fonte__detalhes {
     grid-auto-flow: column;
@@ -564,18 +1015,62 @@
   }
 }
 @media (min-width: 1024px) {
-  .filtros {
-    grid-template-columns: 1fr 1fr;
-    align-items: start;
-  }
-  .filtros__acoes {
-    grid-column: 1 / -1;
-  }
   .grafico {
     padding: var(--espaco-5);
   }
-  .card-indicador__valor {
-    font-size: 1.85rem;
+  .visao-geral {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    align-items: start;
+  }
+}
+
+/*
+ * Alinhamento dos filtros por subgrid: linha 1 = controles (alinhados pela base), linha 2 = mensagens.
+ * Município e Período ocupam as duas linhas e herdam as faixas da grade do formulário, então a
+ * quantidade de níveis de rótulo (Período > Início > Mês x Município) não importa.
+ * Sem suporte a subgrid, fica o layout empilhado.
+ */
+@supports (grid-template-rows: subgrid) {
+  @media (min-width: 1024px) {
+    .filtros {
+      grid-template-columns: minmax(16rem, 1fr) minmax(0, 2fr);
+      grid-template-rows: auto auto;
+      gap: var(--espaco-2) var(--espaco-5);
+    }
+    .filtros > .campo--municipio,
+    .filtros > .grupo-campos--periodo {
+      display: grid;
+      grid-row: 1 / span 2;
+      grid-template-rows: subgrid;
+      row-gap: var(--espaco-2);
+    }
+    .filtros .campo__controle,
+    .filtros .periodo__controles {
+      align-self: end;
+    }
+    .filtros .campo__mensagens {
+      align-self: start;
+    }
+    .filtros__acoes {
+      grid-row: 3;
+      grid-column: 1 / -1;
+      margin-top: var(--espaco-3);
+    }
+  }
+  /* Faixa larga (medida no contêiner, então acompanha o A+): botões na linha dos controles. */
+  @media (min-width: 1200px) {
+    @container filtros (min-width: 67.5rem) {
+      .filtros {
+        grid-template-columns: minmax(16rem, 1fr) minmax(0, 2fr) auto;
+      }
+      .filtros__acoes {
+        grid-row: 1;
+        grid-column: 3;
+        align-self: end;
+        flex-wrap: nowrap;
+        margin-top: 0;
+      }
+    }
   }
 }
 

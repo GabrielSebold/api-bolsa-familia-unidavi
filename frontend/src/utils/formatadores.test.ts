@@ -6,6 +6,7 @@ import {
   formatarMesExtenso,
   formatarMoeda,
   formatarPercentual,
+  formatarPercentualDuasCasas,
 } from './formatadores';
 
 const norm = (s: string) => s.replace(/[\u00a0\u202f]/g, ' ');
@@ -36,6 +37,12 @@ describe('formatadores', () => {
     expect(norm(formatarPercentual(12.34))).toBe('+12,3%');
     expect(norm(formatarPercentual(-5))).toMatch(/^[-−]5,0%$/);
     expect(norm(formatarPercentual(0))).toBe('0,0%');
+  });
+
+  it('percentual com 2 casas, sem sinal', () => {
+    expect(norm(formatarPercentualDuasCasas(100))).toBe('100,00%');
+    expect(norm(formatarPercentualDuasCasas(100 / 3))).toBe('33,33%');
+    expect(formatarPercentualDuasCasas(null)).toBe('—');
   });
 
   it('data/hora no fuso de São Paulo', () => {
