@@ -1,69 +1,152 @@
 /*
- * Tokens de design. Cores em hex literal (sem var()) porque styles/contraste.test.ts lê este arquivo.
- * Paleta de gráficos baseada em Okabe-Ito (segura para daltonismo); a cor nunca é o único canal:
- * os gráficos usam também padrões, marcadores e tracejados.
+ * Tokens de design. Paleta do Padrão Digital de Governo (gov.br Design System 3.7.0, licença MIT),
+ * copiada de @govbr-ds/core dist/core-tokens.css e reimplementada aqui sem a biblioteca.
+ * Cores em hex literal (sem var()) porque styles/contraste.test.ts lê este arquivo.
+ * Nos gráficos a cor nunca é o único canal: há também padrões, marcadores e tracejados.
  * Metas: texto >= 4.5:1; bordas, foco e elementos de gráfico >= 3:1.
  */
 
 :root,
 [data-theme='claro'] {
   --cor-fundo: #ffffff;
-  --cor-superficie: #f3f5f7;
-  --cor-texto: #17202a;
-  --cor-texto-suave: #46525f;
-  --cor-borda: #66727f;
-  --cor-borda-suave: #d5dbe1;
-  --cor-primaria: #00598a;
+  --cor-superficie: #f8f8f8;
+  --cor-texto: #333333;
+  --cor-texto-suave: #555555;
+  --cor-borda: #888888;
+  --cor-borda-suave: #cccccc;
+  --cor-primaria: #1351b4;
   --cor-primaria-texto: #ffffff;
-  --cor-link: #00598a;
-  --cor-foco: #0072b2;
-  --cor-erro-fundo: #fdecea;
-  --cor-erro-texto: #8a1c10;
-  --cor-aviso-fundo: #fff4d6;
-  --cor-aviso-texto: #5c4200;
-  --cor-info-fundo: #e5f1fa;
-  --cor-info-texto: #0b3f63;
+  --cor-primaria-escura: #0c326f;
+  --cor-link: #1351b4;
+  --cor-foco: #936f38;
+  --cor-foco-rodape: #ffbe2e;
+  --cor-erro: #b50909;
+  --cor-erro-fundo: #fde0db;
+  --cor-erro-texto: #333333;
+  --cor-erro-destaque: #e52207;
+  --cor-aviso-fundo: #fff5c2;
+  --cor-aviso-texto: #333333;
+  --cor-aviso-destaque: #947100;
+  --cor-info-fundo: #d4e5ff;
+  --cor-info-texto: #333333;
+  --cor-info-destaque: #155bcb;
+  --cor-rodape-fundo: #071d41;
+  --cor-rodape-texto: #ffffff;
+  --cor-rodape-link: #c5d4eb;
+  --cor-marca: #1351b4;
 
-  --cor-grafico-1: #0072b2;
-  --cor-grafico-2: #a86a00;
-  --cor-grafico-3: #007a59;
-  --cor-grafico-4: #d55e00;
-  --cor-grafico-5: #a1457a;
-  --cor-grafico-positivo: #007a59;
-  --cor-grafico-negativo: #d55e00;
-  --cor-grafico-eixo: #66727f;
+  /* Barras de percentual (preenchimento x trilho) e pílulas de variação. */
+  --cor-barra: #1351b4;
+  --cor-barra-trilho: #dbe8fb;
+  --cor-pilula-positivo-fundo: #e3f5e1;
+  --cor-pilula-positivo-texto: #00593b;
+  --cor-pilula-negativo-fundo: #fff1e5;
+  --cor-pilula-negativo-texto: #8a3c00;
+
+  --cor-grafico-1: #1351b4;
+  --cor-grafico-2: #c05600;
+  --cor-grafico-3: #008659;
+  --cor-grafico-4: #b50909;
+  --cor-grafico-5: #783cb9;
+  --cor-grafico-positivo: #008659;
+  --cor-grafico-negativo: #c05600;
+  --cor-grafico-eixo: #757575;
 }
 
+/* Escuro: superfícies dark-mode do DS (azul profundo). */
 [data-theme='escuro'] {
-  --cor-fundo: #0f1419;
-  --cor-superficie: #1a222b;
-  --cor-texto: #e8edf2;
-  --cor-texto-suave: #b4bfca;
-  --cor-borda: #8a97a5;
-  --cor-borda-suave: #34404c;
-  --cor-primaria: #56b4e9;
-  --cor-primaria-texto: #0f1419;
-  --cor-link: #7cc4f0;
-  --cor-foco: #f0c24a;
-  --cor-erro-fundo: #3a1a17;
-  --cor-erro-texto: #ffb4a8;
-  --cor-aviso-fundo: #3a2f12;
-  --cor-aviso-texto: #f6d98a;
-  --cor-info-fundo: #14293a;
-  --cor-info-texto: #a9d6f5;
+  --cor-fundo: #071d41;
+  --cor-superficie: #0c326f;
+  --cor-texto: #ffffff;
+  --cor-texto-suave: #d4e5ff;
+  --cor-borda: #81aefc;
+  --cor-borda-suave: #2f4668;
+  --cor-primaria: #c5d4eb;
+  --cor-primaria-texto: #071d41;
+  --cor-primaria-escura: #ffffff;
+  --cor-link: #c5d4eb;
+  --cor-foco: #ffbe2e;
+  --cor-foco-rodape: #ffbe2e;
+  --cor-erro: #ff8d7b;
+  --cor-erro-fundo: #5c1111;
+  --cor-erro-texto: #fde0db;
+  --cor-erro-destaque: #ff8d7b;
+  --cor-aviso-fundo: #422d19;
+  --cor-aviso-texto: #fff5c2;
+  --cor-aviso-destaque: #ffcd07;
+  --cor-info-fundo: #0c326f;
+  --cor-info-texto: #d4e5ff;
+  --cor-info-destaque: #81aefc;
+  --cor-rodape-fundo: #13171f;
+  --cor-rodape-texto: #ffffff;
+  --cor-rodape-link: #c5d4eb;
+  --cor-marca: #ffffff;
 
-  --cor-grafico-1: #56b4e9;
-  --cor-grafico-2: #e69f00;
-  --cor-grafico-3: #2fbf94;
-  --cor-grafico-4: #e8743b;
-  --cor-grafico-5: #cc79a7;
-  --cor-grafico-positivo: #2fbf94;
-  --cor-grafico-negativo: #e8743b;
-  --cor-grafico-eixo: #8a97a5;
+  --cor-barra: #81aefc;
+  --cor-barra-trilho: #2f4668;
+  --cor-pilula-positivo-fundo: #003d29;
+  --cor-pilula-positivo-texto: #d4f5e4;
+  --cor-pilula-negativo-fundo: #4a2400;
+  --cor-pilula-negativo-texto: #ffe3cc;
+
+  --cor-grafico-1: #81aefc;
+  --cor-grafico-2: #ff8c00;
+  --cor-grafico-3: #04c585;
+  --cor-grafico-4: #ff8d7b;
+  --cor-grafico-5: #c39deb;
+  --cor-grafico-positivo: #04c585;
+  --cor-grafico-negativo: #ff8c00;
+  --cor-grafico-eixo: #adcdff;
+}
+
+/* Alto contraste: fundo preto, texto branco, ações e foco em amarelo. */
+[data-theme='contraste'] {
+  --cor-fundo: #000000;
+  --cor-superficie: #1b1b1b;
+  --cor-texto: #ffffff;
+  --cor-texto-suave: #e6e6e6;
+  --cor-borda: #ffffff;
+  --cor-borda-suave: #adadad;
+  --cor-primaria: #ffcd07;
+  --cor-primaria-texto: #000000;
+  --cor-primaria-escura: #ffffff;
+  --cor-link: #ffcd07;
+  --cor-foco: #ffcd07;
+  --cor-foco-rodape: #ffcd07;
+  --cor-erro: #ff8d7b;
+  --cor-erro-fundo: #000000;
+  --cor-erro-texto: #ffffff;
+  --cor-erro-destaque: #ff8d7b;
+  --cor-aviso-fundo: #000000;
+  --cor-aviso-texto: #ffffff;
+  --cor-aviso-destaque: #ffcd07;
+  --cor-info-fundo: #000000;
+  --cor-info-texto: #ffffff;
+  --cor-info-destaque: #81aefc;
+  --cor-rodape-fundo: #000000;
+  --cor-rodape-texto: #ffffff;
+  --cor-rodape-link: #ffcd07;
+  --cor-marca: #ffffff;
+
+  --cor-barra: #ffcd07;
+  --cor-barra-trilho: #333333;
+  --cor-pilula-positivo-fundo: #003d29;
+  --cor-pilula-positivo-texto: #ffffff;
+  --cor-pilula-negativo-fundo: #4d1f00;
+  --cor-pilula-negativo-texto: #ffffff;
+
+  --cor-grafico-1: #81aefc;
+  --cor-grafico-2: #ff8c00;
+  --cor-grafico-3: #04c585;
+  --cor-grafico-4: #ff8d7b;
+  --cor-grafico-5: #c39deb;
+  --cor-grafico-positivo: #04c585;
+  --cor-grafico-negativo: #ff8c00;
+  --cor-grafico-eixo: #ffffff;
 }
 
 :root {
-  --fonte-base: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --fonte-base: 'Rawline', 'Raleway', sans-serif;
   --fonte-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --espaco-1: 0.25rem;
@@ -74,9 +157,14 @@
   --espaco-6: 2rem;
   --espaco-7: 3rem;
 
-  --raio: 0.5rem;
+  --raio: 0.25rem;
+  --raio-cartao: 0.5rem;
+  --raio-painel: 1rem;
+  --raio-pilula: 100em;
+  --sombra-1: 0 1px 6px rgb(0 0 0 / 0.16);
   --alvo-minimo: 44px;
   --largura-max: 75rem;
-  --foco-largura: 3px;
-  --foco-offset: 2px;
+  --foco-largura: 4px;
+  --foco-offset: 4px;
+  --foco-estilo: dashed;
 }

@@ -7,7 +7,7 @@ type Tokens = Record<string, string>;
 
 const css = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'tokens.css'), 'utf8');
 
-function blocos(tema: 'claro' | 'escuro'): Tokens {
+function blocos(tema: 'claro' | 'escuro' | 'contraste'): Tokens {
   const tokens: Tokens = {};
   for (const [, seletor, corpo] of css.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
     if (!seletor?.includes(`[data-theme='${tema}']`)) continue;
@@ -43,6 +43,13 @@ const TEXTO: [string, string][] = [
   ['--cor-erro-texto', '--cor-erro-fundo'],
   ['--cor-aviso-texto', '--cor-aviso-fundo'],
   ['--cor-info-texto', '--cor-info-fundo'],
+  ['--cor-erro', '--cor-fundo'],
+  ['--cor-erro', '--cor-superficie'],
+  ['--cor-rodape-texto', '--cor-rodape-fundo'],
+  ['--cor-rodape-link', '--cor-rodape-fundo'],
+  ['--cor-marca', '--cor-fundo'],
+  ['--cor-pilula-positivo-texto', '--cor-pilula-positivo-fundo'],
+  ['--cor-pilula-negativo-texto', '--cor-pilula-negativo-fundo'],
 ];
 
 /** Componentes e elementos gráficos (>= 3:1) contra os dois fundos. */
@@ -58,13 +65,14 @@ const NAO_TEXTO = [
   '--cor-grafico-positivo',
   '--cor-grafico-negativo',
   '--cor-grafico-eixo',
+  '--cor-barra',
 ];
 
-describe.each(['claro', 'escuro'] as const)('contraste do tema %s', (tema) => {
+describe.each(['claro', 'escuro', 'contraste'] as const)('contraste do tema %s', (tema) => {
   const t = blocos(tema);
 
   it('define todos os tokens usados nos pares', () => {
-    for (const nome of [...TEXTO.flat(), ...NAO_TEXTO, '--cor-fundo', '--cor-superficie']) {
+    for (const nome of [...TEXTO.flat(), ...NAO_TEXTO, '--cor-fundo', '--cor-superficie', '--cor-foco-rodape', '--cor-barra-trilho']) {
       expect(t[nome], `${nome} ausente em ${tema}`).toBeDefined();
     }
   });
@@ -76,5 +84,13 @@ describe.each(['claro', 'escuro'] as const)('contraste do tema %s', (tema) => {
   it.each(NAO_TEXTO)('%s tem pelo menos 3:1 sobre o fundo e a superfície', (nome) => {
     expect(contraste(t[nome] as string, t['--cor-fundo'] as string)).toBeGreaterThanOrEqual(3);
     expect(contraste(t[nome] as string, t['--cor-superficie'] as string)).toBeGreaterThanOrEqual(3);
+  });
+
+  it('preenchimento da barra tem pelo menos 3:1 sobre o trilho', () => {
+    expect(contraste(t['--cor-barra'] as string, t['--cor-barra-trilho'] as string)).toBeGreaterThanOrEqual(3);
+  });
+
+  it('foco do rodapé tem pelo menos 3:1 sobre o fundo do rodapé', () => {
+    expect(contraste(t['--cor-foco-rodape'] as string, t['--cor-rodape-fundo'] as string)).toBeGreaterThanOrEqual(3);
   });
 });

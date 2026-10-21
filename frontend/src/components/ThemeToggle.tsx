@@ -8,6 +8,7 @@ interface Props {
 const OPCOES: { valor: PreferenciaTema; rotulo: string }[] = [
   { valor: 'claro', rotulo: 'Claro' },
   { valor: 'escuro', rotulo: 'Escuro' },
+  { valor: 'contraste', rotulo: 'Alto contraste' },
   { valor: 'auto', rotulo: 'Automático' },
 ];
 

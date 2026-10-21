@@ -19,7 +19,7 @@ export function RelatoriosExportacao({ filtros, municipio, registros, consultaCo
     // Município e período são os filtros RF04 ativos no dashboard e definem o arquivo inteiro.
     const periodoCompleto = escopo === 'bruto' ? consultaCompleta : undefined;
     const q = new URLSearchParams({
-      codigoIbge: filtros.ibge,
+      codigoIbge: filtros.ibge ?? '',
       de: periodoCompleto?.de ?? filtros.de,
       ate: periodoCompleto?.ate ?? filtros.ate,
       escopo,
@@ -50,7 +50,7 @@ export function RelatoriosExportacao({ filtros, municipio, registros, consultaCo
 
   return <section aria-labelledby="titulo-relatorios" className="relatorios">
     <h2 id="titulo-relatorios">Relatórios e Exportação</h2>
-    <p className="relatorios__contexto"><strong>Município:</strong> {municipio ? `${municipio.nome} (${municipio.uf})` : `IBGE ${filtros.ibge}`} <span aria-hidden="true">·</span> <strong>Período:</strong> {formatarMesAno(filtros.de)} a {formatarMesAno(filtros.ate)}</p>
+    <p className="relatorios__contexto"><strong>Município:</strong> {municipio ? `${municipio.nome} (${municipio.uf})` : `IBGE ${filtros.ibge ?? ''}`} <span aria-hidden="true">·</span> <strong>Período:</strong> {formatarMesAno(filtros.de)} a {formatarMesAno(filtros.ate)}</p>
     <fieldset className="relatorios__escopo"><legend>Conjunto de dados dos arquivos</legend>
       <label className="opcao-radio"><input type="radio" name="escopo-exportacao" checked={escopo === 'bruto'} onChange={() => setEscopo('bruto')} /> Dados brutos da consulta</label>
       <label className="opcao-radio"><input type="radio" name="escopo-exportacao" checked={escopo === 'filtrado'} onChange={() => setEscopo('filtrado')} /> Dados filtrados pelo período selecionado</label>

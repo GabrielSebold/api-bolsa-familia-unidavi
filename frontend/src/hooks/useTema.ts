@@ -1,15 +1,19 @@
 import { useCallback, useEffect, useState } from 'react';
 
-export type PreferenciaTema = 'claro' | 'escuro' | 'auto';
-export type TemaEfetivo = 'claro' | 'escuro';
+export type PreferenciaTema = 'claro' | 'escuro' | 'contraste' | 'auto';
+export type TemaEfetivo = 'claro' | 'escuro' | 'contraste';
 
 export const CHAVE_TEMA = 'bf:tema';
 const CONSULTA_ESCURO = '(prefers-color-scheme: dark)';
 
+/** Valida o valor salvo; qualquer valor desconhecido vira 'auto'. */
+export function normalizarPreferencia(v: string | null): PreferenciaTema {
+  return v === 'claro' || v === 'escuro' || v === 'contraste' || v === 'auto' ? v : 'auto';
+}
+
 function lerPreferencia(): PreferenciaTema {
   try {
-    const v = localStorage.getItem(CHAVE_TEMA);
-    if (v === 'claro' || v === 'escuro' || v === 'auto') return v;
+    return normalizarPreferencia(localStorage.getItem(CHAVE_TEMA));
   } catch {
     // localStorage indisponível
   }
@@ -28,7 +32,7 @@ function resolver(pref: PreferenciaTema): TemaEfetivo {
 function aplicar(tema: TemaEfetivo): void {
   const raiz = document.documentElement;
   raiz.setAttribute('data-theme', tema);
-  raiz.style.colorScheme = tema === 'escuro' ? 'dark' : 'light';
+  raiz.style.colorScheme = tema === 'claro' ? 'light' : 'dark';
 }
 
 export interface UseTema {
